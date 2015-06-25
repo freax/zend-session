@@ -17,4 +17,5 @@ use SessionHandlerInterface;
  * @see        http://php.net/session_set_save_handler
  */
 interface SaveHandlerInterface extends SessionHandlerInterface
-{}
+{
+}
