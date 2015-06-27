@@ -39,6 +39,11 @@ class SessionManager extends AbstractManager
     protected $validatorChain;
 
     /**
+     * @var bool Regenerate session id flag
+     */
+    protected $regenerateSessionId = true;
+
+    /**
      * Constructor
      *
      * @param  Config\ConfigInterface|null           $config
@@ -285,17 +290,41 @@ class SessionManager extends AbstractManager
     }
 
     /**
+     * Set flag for regenerate session id
+     *
+     * @param bool $regenerateSessionId
+     * @return SessionManager
+     */
+    public function setRegenerateSessionId($regenerateSessionId)
+    {
+        $this->regenerateSessionId = (bool) $regenerateSessionId;
+        return $this;
+    }
+
+    /**
+     * Get flag for regenerate session id
+     *
+     * @return bool
+     */
+    public function getRegenerateSessionId()
+    {
+        return $this->regenerateSessionId;
+    }
+
+    /**
      * Regenerate id
      *
-     * Regenerate the session ID, using session save handler's
-     * native ID generation Can safely be called in the middle of a session.
+     * Regenerate the session ID if `regenerateSessionId` is true, using session save handler's
+     * native ID generation. Can safely be called in the middle of a session.
      *
      * @param  bool $deleteOldSession
      * @return SessionManager
      */
     public function regenerateId($deleteOldSession = true)
     {
-        session_regenerate_id((bool) $deleteOldSession);
+        if ($this->getRegenerateSessionId()) {
+            session_regenerate_id((bool) $deleteOldSession);
+        }
         return $this;
     }
 
