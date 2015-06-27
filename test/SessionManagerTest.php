@@ -394,6 +394,30 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testFlagRegenerateIdSetToTrue()
+    {
+        $this->manager->setRegenerateSessionId(true);
+        $this->manager->start();
+        $origId = $this->manager->getId();
+        $this->manager->regenerateId();
+        $this->assertNotSame($origId, $this->manager->getId());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testFlagRegenerateIdSetToFalse()
+    {
+        $this->manager->setRegenerateSessionId(false);
+        $this->manager->start();
+        $origId = $this->manager->getId();
+        $this->manager->regenerateId();
+        $this->assertSame($origId, $this->manager->getId());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testRegeneratingIdAfterSessionStartedShouldSendExpireCookie()
     {
         if (!extension_loaded('xdebug')) {
