@@ -118,7 +118,7 @@ class DbTableGateway implements SaveHandlerInterface
      */
     public function write($id, $data)
     {
-        $data = [
+        $writeData = [
             $this->options->getModifiedColumn() => time(),
             $this->options->getDataColumn()     => (string) $data,
         ];
@@ -129,16 +129,17 @@ class DbTableGateway implements SaveHandlerInterface
         ]);
 
         if ($rows->current()) {
-            return (bool) $this->tableGateway->update($data, [
+            return (bool) $this->tableGateway->update($writeData, [
                 $this->options->getIdColumn()   => $id,
                 $this->options->getNameColumn() => $this->sessionName,
             ]);
         }
-        $data[$this->options->getLifetimeColumn()] = $this->lifetime;
-        $data[$this->options->getIdColumn()]       = $id;
-        $data[$this->options->getNameColumn()]     = $this->sessionName;
 
-        return (bool) $this->tableGateway->insert($data);
+        $writeData[$this->options->getLifetimeColumn()] = $this->lifetime;
+        $writeData[$this->options->getIdColumn()]       = $id;
+        $writeData[$this->options->getNameColumn()]     = $this->sessionName;
+
+        return (bool) $this->tableGateway->insert($writeData);
     }
 
     /**
